@@ -23,3 +23,35 @@ Add dependency to `Package.swift`...
 ```swift
 .target(name: "ExampleApp", dependencies: ["CoreDataCombine"]),
 ```
+
+## NSManagedObjectContext + Scheduler
+
+```swift
+import CoreData
+import Combine
+import CoreDataCombine
+
+let subscription = Deferred {
+    // Write `Book` on background thread in `backgroundContext`
+    Result<NSManagedObjectID, Error> {
+        let book = Book(context: self.backgroundContext)
+        book.name = "CoreData"
+        try self.backgroundContext.save()
+        return book.objectID
+    }.publisher
+}
+.subscribe(on: backgroundContext)
+.receive(on: viewContext)
+.map { (id: NSManagedObjectID) -> Book in
+    // Read `Book` on main thread in `viewContext`.
+    return self.viewContext.object(with: id) as! Book
+}
+.sink(
+    receiveCompletion: { completion in
+        print(completion)
+    },
+    receiveValue: { (book: Book) in
+        // Receive `Book` on main thread in `viewContext`
+        print(book)
+    })
+```
