@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "CoreDataCombine",
+    name: "CombineCoreData",
     platforms: [
         .iOS("13.0"),
         .macOS("10.15"),
@@ -13,15 +13,15 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "CoreDataCombine",
-            targets: ["CoreDataCombine"]),
+            name: "CombineCoreData",
+            targets: ["CombineCoreData"]),
     ],
     targets: [
         .target(
-            name: "CoreDataCombine",
+            name: "CombineCoreData",
             dependencies: []),
         .testTarget(
-            name: "CoreDataCombineTests",
-            dependencies: ["CoreDataCombine"]),
+            name: "CombineCoreDataTests",
+            dependencies: ["CombineCoreData"]),
     ]
 )

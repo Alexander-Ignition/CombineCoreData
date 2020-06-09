@@ -1,4 +1,4 @@
-# CoreDataCombine
+# 🚜 CombineCoreData
 
 [![SPM compatible](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/Alexander-Ignition/OSLogging/blob/master/LICENSE)
@@ -15,21 +15,21 @@
 Add dependency to `Package.swift`...
 
 ```swift
-.package(url: "https://github.com/Alexander-Ignition/CoreDataCombine", from: "0.0.1"),
+.package(url: "https://github.com/Alexander-Ignition/CombineCoreData", from: "0.0.2"),
 ```
 
 ... and your target
 
 ```swift
-.target(name: "ExampleApp", dependencies: ["CoreDataCombine"]),
+.target(name: "ExampleApp", dependencies: ["CombineCoreData"]),
 ```
 
 ## NSManagedObjectContext + Scheduler
 
 ```swift
-import CoreData
 import Combine
-import CoreDataCombine
+import CoreData
+import CombineCoreData
 
 let subscription = Deferred {
     // Write `Book` on background thread in `backgroundContext`

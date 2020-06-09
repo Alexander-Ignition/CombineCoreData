@@ -27,12 +27,3 @@ enum Schema {
         ]
     }
 }
-
-// MARK: - Helpers
-
-private extension NSObjectProtocol {
-    func apply(configure: (Self) -> Void) -> Self {
-        configure(self)
-        return self
-    }
-}

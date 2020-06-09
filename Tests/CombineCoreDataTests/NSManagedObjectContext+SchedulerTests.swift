@@ -1,6 +1,6 @@
-import CoreData
 import Combine
-import CoreDataCombine
+import CoreData
+import CombineCoreData
 import XCTest
 
 final class NSManagedObjectContext_SchedulerTests: XCTestCase {
