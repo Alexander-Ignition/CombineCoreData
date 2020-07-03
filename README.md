@@ -19,7 +19,7 @@
 Add dependency to `Package.swift`...
 
 ```swift
-.package(url: "https://github.com/Alexander-Ignition/CombineCoreData", from: "0.0.2"),
+.package(url: "https://github.com/Alexander-Ignition/CombineCoreData", from: "0.0.3"),
 ```
 
 ... and your target
