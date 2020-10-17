@@ -54,7 +54,7 @@ func saveBooks(names: [String]) -> AnyPublisher<Void, Error> {
             book.name = name
         }
         try self.backgroundContex.save()
-    }.eraseToAnyPublisher()
+    }
 }
 ```
 
@@ -64,7 +64,7 @@ Example of asynchronously fetching books in а `backgroundContex` on its private
 
 ```swift
 func fetchBooks() -> AnyPublisher<[Book], Error> {
-    backgroundContex.fetchPublisher(Book.all).eraseToAnyPublisher()
+    backgroundContex.fetchPublisher(Book.all)
 }
 ```
 

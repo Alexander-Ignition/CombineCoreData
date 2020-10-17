@@ -36,7 +36,7 @@ extension BookStorage {
                 book.name = name
             }
             try self.backgroundContex.save()
-        }.eraseToAnyPublisher()
+        }
     }
 }
 
@@ -56,6 +56,6 @@ extension BookStorage {
     }
 
     func fetchBooks() -> AnyPublisher<[Book], Error> {
-        backgroundContex.fetchPublisher(Book.all).eraseToAnyPublisher()
+        backgroundContex.fetchPublisher(Book.all)
     }
 }

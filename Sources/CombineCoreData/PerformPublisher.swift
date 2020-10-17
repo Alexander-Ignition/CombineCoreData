@@ -1,27 +1,6 @@
 import Combine
 import CoreData
 
-/// A publisher that asynchronously performs a given `block` on the context’s queue.
-public struct PerformPublisher<Output>: Publisher {
-    /// Untyped error is thrown from the `block`.
-    public typealias Failure = Error
-
-    /// The context on which `block` will be executed.
-    let managedObjectContext: NSManagedObjectContext
-
-    /// A block to execute in `managedObjectContext`.
-    let block: () throws -> Output
-
-    public func receive<S>(
-        subscriber: S
-    ) where S: Subscriber, Failure == S.Failure, Output == S.Input {
-        let subscription = PerformSubscription<Output>(
-            subscriber: AnySubscriber(subscriber),
-            publisher: self)
-        subscriber.receive(subscription: subscription)
-    }
-}
-
 // MARK: - NSManagedObjectContext + PerformPublisher
 
 extension NSManagedObjectContext {
@@ -44,8 +23,11 @@ extension NSManagedObjectContext {
     /// - Returns: Publisher of subscriptions that execute in the context.
     public func publisher<T>(
         _ block: @escaping () throws -> T
-    ) -> PerformPublisher<T> {
-        PerformPublisher<T>(managedObjectContext: self, block: block)
+    ) -> AnyPublisher<T, Error> {
+        PerformPublisher<T>(
+            managedObjectContext: self,
+            block: block
+        ).eraseToAnyPublisher()
     }
 
     /// Asynchronously performs the fetch request on the context’s queue.
@@ -64,14 +46,35 @@ extension NSManagedObjectContext {
     /// - Returns: Publisher of subscriptions that execute in the context.
     public func fetchPublisher<T>(
         _ fetchRequest: NSFetchRequest<T>
-    ) -> PerformPublisher<[T]> where T: NSFetchRequestResult {
+    ) -> AnyPublisher<[T], Error> where T: NSFetchRequestResult {
         PerformPublisher<[T]>(managedObjectContext: self) {
             try fetchRequest.execute()
-        }
+        }.eraseToAnyPublisher()
     }
 }
 
 // MARK: - Private
+
+/// A publisher that asynchronously performs a given `block` on the context’s queue.
+private struct PerformPublisher<Output>: Publisher {
+    /// Untyped error is thrown from the `block`.
+    typealias Failure = Error
+
+    /// The context on which `block` will be executed.
+    let managedObjectContext: NSManagedObjectContext
+
+    /// A block to execute in `managedObjectContext`.
+    let block: () throws -> Output
+
+    func receive<S>(
+        subscriber: S
+    ) where S: Subscriber, Failure == S.Failure, Output == S.Input {
+        let subscription = PerformSubscription<Output>(
+            subscriber: AnySubscriber(subscriber),
+            publisher: self)
+        subscriber.receive(subscription: subscription)
+    }
+}
 
 private final class PerformSubscription<Output>: Subscription, CustomStringConvertible {
     private var subscriber: AnySubscriber<Output, Error>?
